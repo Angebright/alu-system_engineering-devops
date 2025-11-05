@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # This script transfers a file to a remote server's home directory using scp.
 
 # Check if 4 parameters are provided
@@ -13,8 +12,6 @@ IP="$2"
 USERNAME="$3"
 PATH_TO_SSH_KEY="$4"
 
-# Use scp to transfer the file to the user's home directory (~) on the remote server
-# -o StrictHostKeyChecking=no disables the strict host key check
-# -i specifies the identity file (SSH key)
-# The destination is formatted as USERNAME@IP:~/
+# scp must transfer the file to the user home directory (~)
+# Strict host key checking must be disabled
 scp -o StrictHostKeyChecking=no -i "$PATH_TO_SSH_KEY" "$PATH_TO_FILE" "$USERNAME"@"$IP":~/
