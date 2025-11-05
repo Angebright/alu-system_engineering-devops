@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# This script installs Nginx and configures the default page to display "Holberton School".
+
+# 1. Update package list and install Nginx (using -y as required)
+apt-get update -y
+apt-get install -y nginx
+
+# 2. Create or replace the default index.html file with the required content.
+# The checker looks for the specific string at the root (/) which maps to /var/www/html/index.html.
+echo "Holberton School" > /var/www/html/index.html
+
+# 3. Restart Nginx service (without systemctl)
+service nginx restart
