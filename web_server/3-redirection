@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# This script installs Nginx and configures a 301 redirection for /redirect_me.
+
+# 1. Install Nginx (from Task 1 requirements)
+apt-get update -y
+apt-get install -y nginx
+
+# 2. Add the 301 redirect using rewrite. The 'permanent' flag ensures it is a 301 Moved Permanently.
+sed -i '/^server {/a \
+        rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;\
+        \n' /etc/nginx/sites-available/default
+
+# 3. Add the required content to the default index page (Task 1 requirement, retained)
+echo "Holberton School" > /var/www/html/index.html
+
+# 4. Restart Nginx service (without systemctl)
+service nginx restart
