@@ -1,28 +1,26 @@
-#!/usr/bin/env bash
-# This script installs Nginx and configures a 301 redirect and a custom 404 error page.
+cat << 'EOF' | sudo tee /etc/nginx/sites-available/default
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
-# 1. Install Nginx
-apt-get update -y
-apt-get install -y nginx
+    root /var/www/html;
+    index index.html index.htm custom_404.html index.nginx-debian.html;
 
-# 2. Create the custom 404 page file with the required string
-CUSTOM_404_PAGE="/var/www/html/404.html"
-echo "Ceci n'est pas une page" > "$CUSTOM_404_PAGE"
+    server_name _;
 
-# 3. Configure Nginx: Add 301 redirect and custom 404 page directives
-# error_page 404 /404.html; tells Nginx to use the custom page
-# location = /404.html { ... internal; } ensures the file can only be served as an error page.
-sed -i '/^server {/a \
-        error_page 404 /404.html;\
-        location = /404.html {\
-            root /var/www/html;\
-            internal;\
-        }\
-        rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;\
-        \n' /etc/nginx/sites-available/default
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
 
-# 4. Add the required content to the default index page (for Task 1 compliance)
-echo "Holberton School" > /var/www/html/index.html
+    location /xyz {
+        return 404;
+    }
 
-# 5. Restart Nginx service
-service nginx restart
+    # Custom 404 page
+    error_page 404 /custom_404.html;
+
+    location = /custom_404.html {
+        internal;
+    }
+}
+EOF
